@@ -1,0 +1,102 @@
+﻿@using System.Text.RegularExpressions;
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+       Name:
+       Date:
+       Lab 3 BuggyPage problem
+       As provided, this file has bugs. Find and fix them
+       so that the output given David Jon Hendricks displays
+       "Your name is: David J. Hendricks".
+
+        1. All comments are wrong
+        2. fullName is improperly defined, Should be a string
+        3. firstName is improperly defined, Should be a string
+        4. middleInitial is improperly defined, Should be a char
+        5. Code Block on surronded with if block
+        6. fullName not pre defined
+        7. fullName not pre set
+        8. Off by one
+        9. middleName is not truned into a char array
+        10. Array starts at 0
+        11. Substring(start of string, lenth of string)
+        12. Ditto
+
+        extra challenge
+        I added some regular expression. If the user has to enter 
+        3 words and 2 spaces.  If they don't meet the requrments or
+        add more, the website site will tell them to put it in
+        the right format. This will only happen on a post.
+
+
+       You can assume that the user will input only and always
+       three names (challenge: already have programming down?
+       make the page resilient to bad form inputs also)
+    -->
+    <title>Name Manipulation</title>
+</head>
+<body>
+    <p>Enter your full name (First, Middle, Last)</p>
+    <form action="" method="post">
+
+        <p><input type="text" name="name" placeholder="Your Name Here" /></p>
+        <p><input type="submit" value="Submit" /></p>
+        <!-- Notice that when this form is submitted, the name shows up on the URL.
+            Make the name NOT show up on the URL but still be available
+            when the form is submitted. -->
+    </form>
+
+    @{
+
+        /*Error 6*/
+        string fullName = "Samuel J_SomeThingReallllyLooooong Spade";
+        Match myMatch = null;
+
+
+        if (IsPost)/*Error 5*/
+        {
+            /* Get the name submitted by the user */
+            /*Error 2*/
+
+            Regex myReg = new Regex("^\\w+\\s+\\w+\\s+\\w+$", RegexOptions.IgnoreCase);
+            myMatch = myReg.Match(Request.Form["name"]);
+
+            if (myMatch.Success)
+            {//everything is fine
+                fullName = Request.Form["name"];
+            }
+            else
+            {
+                //theres a error in the format
+            }
+        }
+
+
+
+        /* get the first name: from the start of the string to
+        the character before the first space */
+        string firstName = fullName.Substring(0, fullName.IndexOf(' '));/*Error 3 & 10*/
+                                                                        /* get the middle name: from after the first space to the character before the last space*/
+        string middleName = fullName.Substring(fullName.IndexOf(' '), fullName.LastIndexOf(' ') - fullName.IndexOf(' '));/*Error 8 & 11*/
+                                                                                                                         /* turn it into a middle initial (a letter) */
+        char middleInitial = middleName.ToCharArray()[1];/*Error 4 & 9*/
+                                                         /* get the last name */
+        string lastName = fullName.Substring(fullName.LastIndexOf(' '), fullName.Length - fullName.LastIndexOf(' '));/*Error 12*/
+                                                                                                                     /* Now display the information. */
+                                                                                                                     /* Nothing should be displayed if the user has not submitted the form yet */
+        if (IsPost == true && myMatch.Success != true)//only an error when there is a post and no match
+        {
+            <p>There was a error in your name format.... Try again</p>
+            <p>[First-Name] [space] [Middle-Name] [space] [Last-Name]</p>
+
+        }
+        else
+        {
+            /* If the user submits Samuel Jacob Spade this should display Samuel J. Spade */
+            <p>Your name is: @firstName @middleInitial. @lastName</p>
+        }
+    }
+
+</body>
+</html>
