@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+	   Name:
+	   Date:
+	   Lab 3 BuggyPage problem
+	   As provided, this file has bugs. Find and fix them
+	   so that the output given David Jon Hendricks displays
+	   "Your name is: David J. Hendricks".
+	   
+	   You can assume that the user will input only and always
+	   three names (challenge: already have programming down?
+	   make the page resilient to bad form inputs also)
+	-->
+    <title>Name Manipulation</title>
+</head>
+<body>
+    <p>Enter your full name (First, Middle, Last)</p>
+    <form action="" method="post">
+
+        <p><input type="text" name="name" placeholder="Your Name Here" /></p>
+        <p><input type="submit" value="Submit" /></p>
+        @* Notice that when this form is submitted, the name shows up on the URL.
+            Make the name NOT show up on the URL but still be available
+            when the form is submitted. *@
+    </form>
+
+    @{
+        @* Get the name submitted by the user *@
+        char fullName = Request.Form["name"];
+
+        @* get the first name: from the start of the string to
+           the character before the first space *@
+        float firstName = fullName.Substring(1, fullName.IndexOf(' ') - 1);
+
+        @* get the middle name: from after the first space to
+           the character before the last space*@
+        string middleName = fullName.Substring(
+                            @* starts after the first space *@
+                            fullName.IndexOf(' '),
+                            @* goes up to the last space *@
+                            fullName.LastIndexOf(' ') + 1);
+
+        @* turn it into a middle initial (a letter) *@
+        int middleInitial = middleName[0];
+
+        @* get the last name *@
+        string lastName = fullName.Substring(fullName.LastIndexOf(' '), fullName.Length);
+
+        @* Now display the information. *@
+        @* Nothing should be displayed if the user has not submitted the form yet *@
+        @* If the user submits Samuel Jacob Spade this should display Samuel J. Spade *@
+        <p>Your name is: @firstName @middleInitial. @lastName</p>
+    }
+
+</body>
+</html>
